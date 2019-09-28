@@ -90,31 +90,31 @@ def createDataset(datasets_video_path, figure_output_path,fix_len, force = False
                 videos_labels.append(video_images['label'])
         datasets_images[dataset_name] = dataset_images
     avg_length = int(float(sum(videos_seq_length)) / max(len(videos_seq_length), 1))
-    print("Printing Parameters")
-    print(videos_frames_paths)
-    print(videos_labels)
+#     print("Printing Parameters")
+#     print(videos_frames_paths)
+#     print(videos_labels)
     
     train_path, test_path, train_y, test_y =  train_test_split(videos_frames_paths,videos_labels, test_size=0.20, random_state=42)
-    print("trainpath:",train_path)
-    print("testpath:",test_path)
-    print("trainy:",train_y)
-    print("testy:",test_y)
-    print("Returning")
-    return
+#     print("trainpath:",train_path)
+#     print("testpath:",test_path)
+#     print("trainy:",train_y)
+#     print("testy:",test_y)
+#     print("Returning")
+#     return
     
     
 
-    # if apply_aug:
-    #     aug_paths = []
-    #     aug_y = []
-    #     for train_path_, train_y_ in zip(train_path,train_y):
-    #
-    #         aug_path = generate_augmentations(train_path_,force = False)
-    #         aug_paths.append(aug_path)
-    #         aug_y.append(train_y_)
-    #
-    #     train_path = train_path + aug_paths
-    #     train_y = train_y + aug_y
+    if apply_aug:
+        aug_paths = []
+        aug_y = []
+        for train_path_, train_y_ in zip(train_path,train_y):
+    
+            aug_path = generate_augmentations(train_path_,force = False)
+            aug_paths.append(aug_path)
+            aug_y.append(train_y_)
+    
+        train_path = train_path + aug_paths
+        train_y = train_y + aug_y
 
     train_path, valid_path, train_y, valid_y = train_test_split(train_path, train_y, test_size=0.20, random_state=42)
     return train_path,valid_path, test_path,\
@@ -247,21 +247,21 @@ def natural_sort(l):
 
 
 
-# def generate_augmentations(data_path,figure_shape = 244, force = False):
-#     seq_len = 0
-#     crop_path = data_path + "_crop"
-#     if not os.path.exists(crop_path) or force:
-#         frames = natural_sort(glob.glob(os.path.join(data_path, '*jpg')))
-#         frames_arr = frame_loader(frames, figure_shape,to_norm = False)
-#         print("augmenting " + data_path)
-#         os.makedirs(crop_path)
-#         for frame in frames_arr:
-#             #transpose
-#             img_transpose = frame.transpose(1,0,2)
-#             data_path_aug = os.path.join(crop_path,"frame_%d.jpg" % seq_len)
-#             cv2.imwrite(data_path_aug, img_transpose)
-#             seq_len += 1
-#     return crop_path
+def generate_augmentations(data_path,figure_shape = 244, force = False):
+    seq_len = 0
+    crop_path = data_path + "_crop"
+    if not os.path.exists(crop_path) or force:
+        frames = natural_sort(glob.glob(os.path.join(data_path, '*jpg')))
+        frames_arr = frame_loader(frames, figure_shape,to_norm = False)
+        print("augmenting " + data_path)
+        os.makedirs(crop_path)
+        for frame in frames_arr:
+            #transpose
+            img_transpose = frame.transpose(1,0,2)
+            data_path_aug = os.path.join(crop_path,"frame_%d.jpg" % seq_len)
+            cv2.imwrite(data_path_aug, img_transpose)
+            seq_len += 1
+    return crop_path
 
 # def load_data(data_paths,labels,figure_shape,seq_length):
 #     X, y = [], []
