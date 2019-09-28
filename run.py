@@ -17,7 +17,7 @@ from collections import defaultdict
 import plotHistory
 from datetime import datetime
 
-log_dir = "/content/drive/My Drive/ConvLSTM_violence/logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+logdir = "/content/drive/My Drive/ConvLSTM_violence/logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
 tensorboard_callback = keras.callbacks.TensorBoard(log_dir=logdir)
 
 class TestCallback(Callback):
