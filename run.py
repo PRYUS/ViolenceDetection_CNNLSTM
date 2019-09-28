@@ -15,6 +15,10 @@ from numpy.random import seed, shuffle
 from tensorflow import set_random_seed
 from collections import defaultdict
 import plotHistory
+fromd datetime import datetime
+
+log_dir = "/content/drive/My Drive/ConvLSTM_violence/logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard_callback = keras.callbacks.TensorBoard(log_dir=logdir)
 
 class TestCallback(Callback):
     def __init__(self, test_data):
@@ -37,7 +41,7 @@ def train_eval_network(dataset_name, train_gen, validate_gen, test_x, test_y, se
     """the function build, compine fit and evaluate a certain architechtures on a dataset"""
     set_random_seed(2)
     seed(1)
-    result = dict(dataset=dataset_name, cnn_train=cnn_train_type,
+    result = dict(dataset=dataset_name, cnn_train=cnn_train_type,cnn_name=cnn_arch,
                   cnn=cnn_arch.__name__, lstm=lstm_conf[0].__name__, epochs=epochs,
                   learning_rate=learning_rate, batch_size=batch_size, dropout=dropout,
                   optimizer=optimizer[0].__name__, initial_weights=initial_weights, seq_len=seq_len)
@@ -59,8 +63,9 @@ def train_eval_network(dataset_name, train_gen, validate_gen, test_x, test_y, se
         validation_steps=int(float(len_valid) / float(batch_size)),
         callbacks=[EarlyStopping(monitor='val_loss', min_delta=0.001, patience=patience_es, ),
                    ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=patience_lr, min_lr=1e-8, verbose=1),
-                   test_history
+                   test_history, tensorboard_callback
                    ]
+        
     )
     history_to_save = history.history
     history_to_save['test accuracy'] = test_history.test_acc
@@ -214,10 +219,10 @@ classes = 1
 cnns_arch = dict(ResNet50=ResNet50, InceptionV3=InceptionV3, VGG19=VGG19)  #
 learning_rates = [1e-4, 1e-3]
 #use_augs = [True, False, ]
-use_augs = [False,False]
+use_augs = [True,True]
 fix_lens = [20, 10]
 optimizers = [(RMSprop, {}), (Adam, {})]
-dropouts = [0.0, 0.2, 0.3, 0.5]
+dropouts = [0.0, 0.3, 0.5]
 cnn_train_types = ['retrain', 'static']
 
 apply_hyper = True
@@ -225,7 +230,7 @@ apply_hyper = True
 if apply_hyper:
     # the hyper tunning symulate the architechture behavior
     # we set the batch_epoch_ratio - reduced by X to have the hypertunning faster with epoches shorter
-    hyper, results = hyper_tune_network(dataset_name='movies', epochs=30,
+    hyper, results = hyper_tune_network(dataset_name='movies', epochs=2,
                                         batch_size=batch_size, batch_epoch_ratio=1, figure_size=figure_size,
                                         initial_weights=initial_weights, lstm=lstm,
                                         cnns_arch=cnns_arch, learning_rates=learning_rates,
@@ -255,7 +260,7 @@ for dataset_name, dataset_videos in datasets_videos.items():
                                                                                             use_aug=use_aug,
                                                                                             use_crop=True,
                                                                                             crop_dark=crop_dark)
-    result = train_eval_network(epochs=50, dataset_name=dataset_name, train_gen=train_gen, validate_gen=validate_gen,
+    result = train_eval_network(epochs=2, dataset_name=dataset_name, train_gen=train_gen, validate_gen=validate_gen,
                                 test_x=test_x, test_y=test_y, seq_len=seq_len, batch_size=batch_size,
                                 batch_epoch_ratio=0.5, initial_weights=initial_weights, size=figure_size,
                                 cnn_arch=cnn_arch, learning_rate=learning_rate,
