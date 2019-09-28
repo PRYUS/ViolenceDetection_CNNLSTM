@@ -18,7 +18,7 @@ import plotHistory
 from datetime import datetime
 
 logdir = "/content/drive/My Drive/ConvLSTM_violence/logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
-tensorboard_callback = keras.callbacks.TensorBoard(log_dir=logdir)
+#tensorboard_callback = keras.callbacks.TensorBoard(log_dir=logdir)
 
 class TestCallback(Callback):
     def __init__(self, test_data):
@@ -63,7 +63,7 @@ def train_eval_network(dataset_name, train_gen, validate_gen, test_x, test_y, se
         validation_steps=int(float(len_valid) / float(batch_size)),
         callbacks=[EarlyStopping(monitor='val_loss', min_delta=0.001, patience=patience_es, ),
                    ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=patience_lr, min_lr=1e-8, verbose=1),
-                   test_history, tensorboard_callback
+                   test_history
                    ]
         
     )
