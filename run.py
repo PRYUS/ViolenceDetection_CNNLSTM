@@ -15,7 +15,7 @@ from numpy.random import seed, shuffle
 from tensorflow import set_random_seed
 from collections import defaultdict
 import plotHistory
-fromd datetime import datetime
+from datetime import datetime
 
 log_dir = "/content/drive/My Drive/ConvLSTM_violence/logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
 tensorboard_callback = keras.callbacks.TensorBoard(log_dir=logdir)
