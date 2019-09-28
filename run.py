@@ -1,6 +1,6 @@
 import os
 from itertools import chain
-
+import keras
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau, Callback
 from keras.optimizers import RMSprop, Adam
 
