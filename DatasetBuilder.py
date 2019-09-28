@@ -95,7 +95,14 @@ def createDataset(datasets_video_path, figure_output_path,fix_len, force = False
 #     print(videos_labels)
     
     train_path, test_path, train_y, test_y =  train_test_split(videos_frames_paths,videos_labels, test_size=0.20, random_state=42)
-    print(train_path, test_path, train_y, test_y)
+    print("trainpath:",train_path)
+    print("testpath:",test_path)
+    print("trainy:",train_y)
+    print("testy:",test_y)
+    print("Returning")
+    return
+    
+    
 
     # if apply_aug:
     #     aug_paths = []
