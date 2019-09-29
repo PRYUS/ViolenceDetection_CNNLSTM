@@ -37,7 +37,7 @@ class TestCallback(Callback):
 def train_eval_network(dataset_name, train_gen, validate_gen, test_x, test_y, seq_len, epochs, batch_size,
                        batch_epoch_ratio, initial_weights, size, cnn_arch, learning_rate,
                        optimizer, cnn_train_type, pre_weights, lstm_conf, len_train, len_valid, dropout, classes,
-                       patience_es=15, patience_lr=5,cnn_arch_name):
+                       patience_es=15, patience_lr=5):
     """the function build, compine fit and evaluate a certain architechtures on a dataset"""
     set_random_seed(2)
     seed(1)
