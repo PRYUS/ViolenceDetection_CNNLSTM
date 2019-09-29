@@ -169,7 +169,7 @@ def hyper_tune_network(dataset_name, epochs, batch_size, batch_epoch_ratio, figu
                                                           temp_param_data['seq_len'],
                                                           figure_size, use_aug=temp_param_data['use_aug'], force=force,
                                                           classes=classes)
-            params_to_train['cnn_arch_name'] = exp_params_train['cnn_arch_names']
+            params_to_train['cnn_arch_names'] = exp_params_train['cnn_arch_names']
 
             params_to_train.update(temp_param)
             result = train_eval_network(**params_to_train)
