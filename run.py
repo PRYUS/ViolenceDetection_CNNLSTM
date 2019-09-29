@@ -37,11 +37,11 @@ class TestCallback(Callback):
 def train_eval_network(dataset_name, train_gen, validate_gen, test_x, test_y, seq_len, epochs, batch_size,
                        batch_epoch_ratio, initial_weights, size, cnn_arch, learning_rate,
                        optimizer, cnn_train_type, pre_weights, lstm_conf, len_train, len_valid, dropout, classes,
-                       patience_es=15, patience_lr=5):
+                       patience_es=15, patience_lr=5,cnn_arch_name):
     """the function build, compine fit and evaluate a certain architechtures on a dataset"""
     set_random_seed(2)
     seed(1)
-    result = dict(dataset=dataset_name, cnn_train=cnn_train_type,cnn_name=cnn_arch,
+    result = dict(dataset=dataset_name, cnn_train=cnn_train_type,cnn_name=cnn_arch_name,
                   cnn=cnn_arch.__name__, lstm=lstm_conf[0].__name__, epochs=epochs,
                   learning_rate=learning_rate, batch_size=batch_size, dropout=dropout,
                   optimizer=optimizer[0].__name__, initial_weights=initial_weights, seq_len=seq_len)
@@ -140,10 +140,10 @@ def hyper_tune_network(dataset_name, epochs, batch_size, batch_epoch_ratio, figu
 
     best_params_train = dict(optimizer=optimizers[0], learning_rate=learning_rates[0],
                              cnn_train_type=cnn_train_types[0], cnn_arch=list(cnns_arch.values())[0],
-                             dropout=dropouts[0])
+                             dropout=dropouts[0],cnn_arch_names=list(cnns_arch.keys())[0])
     exp_params_train = dict(optimizer=optimizers[1:], learning_rate=learning_rates[1:],
                             cnn_train_type=cnn_train_types[1:], dropout=dropouts[1:],
-                            cnn_arch=cnns_arch.values())
+                            cnn_arch=cnns_arch.values(),cnn_arch_names=cnns_arch.keys())
 
     best_params_data = dict(use_aug=use_augs[0], seq_len=fix_lens[0])
     exp_params_data = dict(use_aug=use_augs[1:], seq_len=fix_lens[1:])
@@ -169,6 +169,7 @@ def hyper_tune_network(dataset_name, epochs, batch_size, batch_epoch_ratio, figu
                                                           temp_param_data['seq_len'],
                                                           figure_size, use_aug=temp_param_data['use_aug'], force=force,
                                                           classes=classes)
+            params_to_train['cnn_arch_name'] = cnn_arch_names
 
             params_to_train.update(temp_param)
             result = train_eval_network(**params_to_train)
