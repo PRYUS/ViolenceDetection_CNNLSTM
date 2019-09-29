@@ -37,11 +37,11 @@ class TestCallback(Callback):
 def train_eval_network(dataset_name, train_gen, validate_gen, test_x, test_y, seq_len, epochs, batch_size,
                        batch_epoch_ratio, initial_weights, size, cnn_arch, learning_rate,
                        optimizer, cnn_train_type, pre_weights, lstm_conf, len_train, len_valid, dropout, classes,
-                       patience_es=15, patience_lr=5):
+                       patience_es=15, patience_lr=5,cnn_arch_names):
     """the function build, compine fit and evaluate a certain architechtures on a dataset"""
     set_random_seed(2)
     seed(1)
-    result = dict(dataset=dataset_name, cnn_train=cnn_train_type,cnn_name=cnn_arch_name,
+    result = dict(dataset=dataset_name, cnn_train=cnn_train_type,cnn_name=cnn_arch_names,
                   cnn=cnn_arch.__name__, lstm=lstm_conf[0].__name__, epochs=epochs,
                   learning_rate=learning_rate, batch_size=batch_size, dropout=dropout,
                   optimizer=optimizer[0].__name__, initial_weights=initial_weights, seq_len=seq_len)
