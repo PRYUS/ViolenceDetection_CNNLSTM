@@ -214,7 +214,7 @@ batch_size = 2
 fix_len = 30
 initial_weights = 'glorot_uniform'
 weights = 'imagenet'
-force = True
+force = False
 lstm = (ConvLSTM2D, dict(filters=256, kernel_size=(3, 3), padding='same', return_sequences=False))
 classes = 1
 
