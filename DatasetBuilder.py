@@ -251,7 +251,7 @@ def natural_sort(l):
 
 
 
-def generate_augmentations(data_path,figure_shape = 244, force = False):
+def generate_augmentations(data_path,figure_shape = 224, force = False):
     seq_len = 0
     crop_path = data_path + "_crop"
     if not os.path.exists(crop_path) or force:
