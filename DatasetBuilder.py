@@ -14,8 +14,8 @@ import random
 
 corner_keys = ["Center","Left_up","Left_down","Right_up","Right_down"]
 
-Debug_Print_AUG=False
-apply_aug = False
+Debug_Print_AUG=True
+apply_aug = True
 
 def save_figures_from_video(dataset_video_path, video_filename, suffix,figures_path,skip_frames = 25,apply_norm = True, apply_diff = True,fix_len = None):
     seq_len = 0
@@ -82,6 +82,9 @@ def createDataset(datasets_video_path, figure_output_path,fix_len, force = False
                     elif dataset_name == "crimes":
                         if "Normal" not in filename:
                             video_images['label'] = 1
+                    elif dataset_name == "UniCrimes":
+                        if "Norm" not in filename:
+                            video_images['label'] = 1
                             
                     with open(video_images_file, 'wb') as f:
                         pickle.dump(video_images, f, pickle.HIGHEST_PROTOCOL)
@@ -95,7 +98,7 @@ def createDataset(datasets_video_path, figure_output_path,fix_len, force = False
 #     print(videos_frames_paths)
 #     print(videos_labels)
     
-    train_path, test_path, train_y, test_y =  train_test_split(videos_frames_paths,videos_labels, test_size=0.20, random_state=42)
+    train_path, test_path, train_y, test_y =  train_test_split(videos_frames_paths,videos_labels, test_size=0.15, random_state=42)
 #     print("trainpath:",train_path)
 #     print("testpath:",test_path)
 #     print("trainy:",train_y)
