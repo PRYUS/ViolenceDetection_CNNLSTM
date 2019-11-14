@@ -95,7 +95,7 @@ def train_eval_network(dataset_name, train_gen, validate_gen, test_x, test_y, se
     return result
 
 
-def get_generators(dataset_name, dataset_videos, datasets_frames, fix_len, figure_size, force, classes=1, use_aug=False,
+def get_generators(dataset_name, dataset_videos, datasets_frames, fix_len, figure_size, force, classes=1, use_aug=True,
                    use_crop=True, crop_dark=None):
     train_path, valid_path, test_path, \
     train_y, valid_y, test_y, \
@@ -192,39 +192,44 @@ datasets_videos = dict(
 #   hocky=dict(hocky="/content/drive/My Drive/ConvLSTM_violence/data/raw_videos/hocky"),
 #     violentflow=dict(violentflow="/content/drive/My Drive/ConvLSTM_violence/data/raw_videos/violentflow")
 #    movies=dict(movies="/content/drive/My Drive/ConvLSTM_violence/data/raw_videos/movies")
-    crimes=dict(crimes="/content/drive/My Drive/ConvLSTM_violence/data/raw_videos/crimes")
+#    crimes=dict(crimes="/content/drive/My Drive/ConvLSTM_violence/data/raw_videos/crimes")
+    UniCrimes=dict(UniCrimes="/content/drive/My Drive/ConvLSTM_violence/data/raw_videos/UniCrimes")
+
 )
 
 crop_dark = dict(
     hocky=(11, 38),
     violentflow=None,
     movies=None,
-    crimes=None
+    crimes=None,
+    UniCrimes=None
 )
 
 datasets_frames = "/content/drive/My Drive/ConvLSTM_violence/data/raw_frames"
-res_path = "/content/drive/My Drive/ConvLSTM_violence/results/crimes_results"
-figure_size = 244
+res_path = "/content/drive/My Drive/ConvLSTM_violence/results/UniCrimes"
+figure_size = 224
 # split_ratio = 0.1
-batch_size = 2
+batch_size = 8
 # batch_epoch_ratio = 0.5 #double the size because we use augmentation
-fix_len = 20
+fix_len = 30
 initial_weights = 'glorot_uniform'
 weights = 'imagenet'
-force = False
+force = True
 lstm = (ConvLSTM2D, dict(filters=256, kernel_size=(3, 3), padding='same', return_sequences=False))
 classes = 1
 
 # hyper parameters for tunning the network
-cnns_arch = dict(ResNet50=ResNet50, InceptionV3=InceptionV3, VGG19=VGG19)  #
-learning_rates = [1e-4, 1e-3]
+cnns_arch = dict(VGG16=VGG16)  
+#cnns_arch = dict(ResNet50=ResNet50, InceptionV3=InceptionV3, VGG19=VGG19, VGG)  #
+learning_rates = [1e-3]
 #use_augs = [True, False, ]
-use_augs = [False,False]
-fix_lens = [20, 10]
-optimizers = [(RMSprop, {}), (Adam, {})]
-dropouts = [0.0, 0.3, 0.5]
-cnn_train_types = ['retrain', 'static']
-
+use_augs = [True]
+fix_lens = [30]
+#optimizers = [(RMSprop, {}), (Adam, {})]
+optimizers = [(Adam, {})]
+dropouts = [0.1]
+#cnn_train_types = ['retrain', 'static']
+cnn_train_types = ['static']
 apply_hyper = False
 
 if apply_hyper:
@@ -246,8 +251,8 @@ if apply_hyper:
                                                                                     hyper['seq_len'],
 else:
     results = []
-    cnn_arch, learning_rate, optimizer, cnn_train_type, dropout, use_aug, fix_len = ResNet50, 0.0001, (
-    Adam, {}), 'retrain', 0.3, False, 20
+    cnn_arch, learning_rate, optimizer, cnn_train_type, dropout, use_aug, fix_len = VGG16, 0.001, (
+    Adam, {}), 'retrain', 0.1, True, 30
 
 # apply best architechture on all datasets with more epochs
 for dataset_name, dataset_videos in datasets_videos.items():
@@ -269,6 +274,6 @@ for dataset_name, dataset_videos in datasets_videos.items():
                                 dropout=dropout, classes=classes)
     plotHistory.plot_and_save_history(result, cnn_arch,res_path + '/' + cnn_arch + dataset_name + epochs + '--history.png')
     results.append(result)
-    pd.DataFrame(results).to_csv("/content/results_datasets.csv")
+    pd.DataFrame(results).to_csv("/content/drive/My Drive/ConvLSTM_violence/results/UniCrimes/results_datasets.csv")
     print(result)
-pd.DataFrame(results).to_csv("/content/results.csv")
+pd.DataFrame(results).to_csv("/content/drive/My Drive/ConvLSTM_violence/results/UniCrimes/results.csv")
